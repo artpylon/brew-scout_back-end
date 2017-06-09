@@ -4,7 +4,7 @@ class BeersController < OpenReadController
   # GET /beers
   def index
     # @current_user_id = current_user.id
-    @beers = Beer.all
+    @beers = current_user.beers
 
     render json: @beers
   end
