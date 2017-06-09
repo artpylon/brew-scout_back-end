@@ -3,6 +3,7 @@ class BeersController < OpenReadController
 
   # GET /beers
   def index
+    # @current_user_id = current_user.id
     @beers = Beer.all
 
     render json: @beers
@@ -10,12 +11,12 @@ class BeersController < OpenReadController
 
   # GET /beers/1
   def show
-    render json: @beer
+    render json: Beer.find(params[:id])
   end
 
   # POST /beers
   def create
-    @beer = Beer.new(beer_params)
+    @beer = current_user.beers.build(beer_params)
 
     if @beer.save
       render json: @beer, status: :created, location: @beer
@@ -36,16 +37,20 @@ class BeersController < OpenReadController
   # DELETE /beers/1
   def destroy
     @beer.destroy
+
+    head :no_content
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_beer
-      @beer = Beer.find(params[:id])
+      @beer = current_user.beers.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def beer_params
       params.require(:beer).permit(:name, :brand, :style, :alc, :price)
     end
+
+    # create_beer_params?
 end
